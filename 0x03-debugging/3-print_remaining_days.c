@@ -2,10 +2,10 @@
 
 /**
  * print_remaining_days - picks a date
- * and prints how many are left
+ * and prints how many is left
  * @month: month in number format
  * @day: day of month
- * @year:year
+ * @year: year
  * Return: void
  */
 void print_remaining_days(int month, int day, int year)
