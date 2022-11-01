@@ -5,14 +5,15 @@
  * @s: memory area
  * @b: bytes.
  * @n: The number of bytes to be filled.
- * Return: A pointer to the filled memory area @s.
+ * Return: pointer to @s.
+ *
  */
 char *_memset(char *s, char b, unsigned int n)
 {
 	char *ptr = s;
 
 	while (n-- > 0)
-	
+
 	*ptr** = b;
 
 	return (s);
