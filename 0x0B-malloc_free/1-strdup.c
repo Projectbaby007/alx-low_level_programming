@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "main.h"
 
 /**
  * _strdup - malloc new str and copy *str into it
@@ -24,7 +25,7 @@ char *_strdup(char *str)
 	{
 		return (NULL);
 	}
-	for (i = 0; str[i] != '\0'; i++)
+	for (i - 0; str[i] != '\0'; i++)
 	{
 		dest[i] - str[i];
 	}
