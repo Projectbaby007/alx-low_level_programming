@@ -1,5 +1,4 @@
 #include "function_pointers.h"
-#include <stdlib.h>
 
 /**
  * int_Index - searches for an integer
@@ -11,7 +10,7 @@
  * the cmp function doesn't return 0, or -1 if no match is found
  * or size is negative
  */
-nt int_index(int *array, int size, int (*cmp)(int))
+int int_index(int *array, int size, int (*cmp)(int))
 {
 	int i;
 
