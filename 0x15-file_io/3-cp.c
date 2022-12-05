@@ -1,33 +1,84 @@
-#include "holberton.h"
+#include "main.h"
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <stdio.h>
 
 /**
-  * append_text_to_file - Open a file and add text to the end of the file
-  * @filename: File to open and append to
-  * @text_content: Text to append to file
-  *
-  * Return: 1 on success, -1 on failures
-  */
-int append_text_to_file(const char *filename, char *text_content)
+ * file1fail - Print error message if can't read file
+ * @file: Name of the file that can't be read
+ */
+void file1fail(char *file)
 {
-	int file, len, wrote;
+	dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", file);
+	exit(98);
+}
 
-	len = 0;
-	if (filename == NULL)
-		return (-1);
-	file = open(filename, O_WRONLY | O_APPEND);
-	if (file == -1)
-		return (-1);
-	if (text_content != NULL)
+/**
+ * file2fail - Print error message if can't write to file
+ * @file: Name of the file that can't be written to
+ */
+void file2fail(char *file)
+{
+	dprintf(STDERR_FILENO, "Error: Can't write to %s\n", file);
+	exit(99);
+}
+
+/**
+ * closefail - Print error message if file can't close
+ * @fd: File descriptor of the file
+ */
+void closefail(int fd)
+{
+	dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd);
+	exit(100);
+}
+
+/**
+  * main - copy the content of one file to another
+  * @argc: Number of arguments received
+  * @argv: Array of arguments received
+  *
+  * Return: 0 on success
+  */
+int main(int argc, char *argv[])
+{
+	int file1, file2, file1rd, file2wr, closed;
+	char buffer[BUFSIZE];
+	mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH;
+
+	if (argc != 3)
 	{
-		while (text_content[len] != '\0')
-			len++;
-		wrote = write(file, text_content, len);
-		if (wrote == -1)
-			return (-1);
+		dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
+		exit(97);
 	}
-	close(file);
-	return (1);
+	if (argv[1] == NULL)
+		file1fail(argv[1]);
+	if (argv[2] == NULL)
+		file2fail(argv[2]);
+	file1 = open(argv[1], O_RDONLY);
+	if (file1 == -1)
+		file1fail(argv[1]);
+	file2 = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, mode);
+	if (file2 == -1)
+		file2fail(argv[2]);
+	file1rd = read(file1, buffer, BUFSIZE);
+	if (file1rd == -1)
+		file1fail(argv[1]);
+	while (file1rd > 0)
+	{
+		file2wr = write(file2, buffer, file1rd);
+		if (file2wr != file1rd)
+			file2fail(argv[2]);
+		file1rd = read(file1, buffer, BUFSIZE);
+		if (file1rd == -1)
+			file1fail(argv[1]);
+	}
+	closed = close(file1);
+	if (closed == -1)
+		closefail(file1);
+	closed = close(file2);
+	if (closed == -1)
+		closefail(file2);
+	return (0);
 }
